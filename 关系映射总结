@@ -18,6 +18,10 @@ cascade没有写，即是默认值，就是不级联的意思。
 
     /** Cascade refresh operation 级联刷新 */
     REFRESH,
+	假设场景 有一个订单,订单里面关联了许多商品,这个订单可以被很多人操作,
+	那么这个时候A对此订单和关联的商品进行了修改,与此同时,B也进行了相同的操作,
+	但是B先一步比A保存了数据,那么当A保存数据的时候,就需要先刷新订单信息及关联的商品信息后,
+	再将订单及商品保存
 
     /**
      * Cascade detach operation
@@ -26,7 +30,16 @@ cascade没有写，即是默认值，就是不级联的意思。
      *
      */
     DETACH
-
+	如果你要删除一个实体，但是它有外键无法删除，你就需要这个级联权限了。它会撤销所有相关的外键关联。
 		
 fetch默认值 EAGER 急加载
 默认情况下，jpa持续性提供程序使用获取类型EAGER：这将要求持续性提供程序运行时必须迫切获取数据
+
+lazy 时 no session
+解决LazyInitializationException异常大概有这么几种方式
+1.关闭LazyInitialization, 将fetch设成eager
+2.在spring boot的配置文件application.properties添加spring.jpa.open-in-view=true
+3.用spring 的OpenSessionInViewFilter
+4. @Test 测试时使用@Transactional
+原文：https://blog.csdn.net/chrislyl/article/details/54630413 
+

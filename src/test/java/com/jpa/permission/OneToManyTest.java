@@ -1,5 +1,8 @@
 package com.jpa.permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -8,28 +11,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jpa.permission.dao.TeacherRepositiry;
-import com.jpa.permission.entitys.Student;
-import com.jpa.permission.entitys.Teacher;
+import com.jpa.permission.dao.TeacherOneToManyRepositiry;
+import com.jpa.permission.onetomany.Student;
+import com.jpa.permission.onetomany.Teacher;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class OneToOneTest {
+public class OneToManyTest {
 	
 	@Autowired
-	private TeacherRepositiry teacherRepo;
+	private TeacherOneToManyRepositiry teacherRepo;
 	
 	@Test
-	public void OneToOneAdd() {
+	public void OneToManyAdd() {
 		
 		Student stu = new Student();
-		
 		stu.setName("Jack2");
+		Student stu2 = new Student();
+		stu2.setName("Jack222");
+		
+		List<Student> stus = new ArrayList<Student>();
+		stus.add(stu);
+		stus.add(stu2);
 		
 		Teacher tea = new Teacher();
-		
 		tea.setName("TOm2");
-		tea.setStu(stu);
+		tea.setStus(stus);
 		
 		teacherRepo.save(tea);
 		
@@ -37,13 +44,13 @@ public class OneToOneTest {
 	
 	@Test
 	@Transactional
-	public void OneToOneQuery() {
-		System.out.println("OneToOneQuery-lazy"+teacherRepo.findById(4));
+	public void OneToManyQuery() {
+		System.out.println("OneToManyQuery-lazy"+teacherRepo.findById(1));
 	}
 	
 	@Test
 	@Transactional
-	public void OneToOneUpdate() {
+	public void OneToManyUpdate() {
 		
 		Student stu = new Student();
 		stu.setName("bbbJack2");
@@ -51,7 +58,7 @@ public class OneToOneTest {
 		Teacher tea = new Teacher();
 		tea.setId(3);
 		tea.setName("HBBBB--11");
-		tea.setStu(stu);
+//		tea.setStu(stu);
 		teacherRepo.save(tea);
 	}
 }

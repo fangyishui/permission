@@ -1,21 +1,21 @@
-package com.jpa.permission.entitys;
+package com.jpa.permission.onetomany;
 
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "t_teacher")
+@Table(name = "teacher")
 @Data
 public class Teacher {
 
@@ -26,6 +26,6 @@ public class Teacher {
 	@Column(length = 100)
 	private String name;
 
-	@OneToOne(cascade= {CascadeType.ALL},fetch=FetchType.LAZY)
-	private Student stu;
+	@OneToMany(cascade= {CascadeType.ALL})
+	private List<Student> stus;
 }
