@@ -1,0 +1,32 @@
+cascade没有写，即是默认值，就是不级联的意思。
+这个和user_role关系表没关系！user_role表的映射关系的维护，和cascade写不写，写什么值一点关系都没有
+	中间表
+如果，你发现User针对Role属性的cascade没有写，但是修改了role的值，确发生变更了，打印出sql语句，也发现还是级联更新了，咋回事？
+这个我也郁闷了好久，hibernate真心不好用，太复杂了。经过苦心调试终于明白了。不是cascade不写没有用，而是你对role的变更是不是先查询出来的持久对象的操作。这样的操作是针对Role持久化对象的修改，和级联没关系，就是说你直接修改了role对象，当然更新了值！
+
+  /** Cascade all operations 级联所有操作 */
+    ALL,
+
+    /** Cascade persist operation 级联新增 */
+    PERSIST,
+
+    /** Cascade merge operation 级联更新或者新增 */
+    MERGE,
+
+    /** Cascade remove operation 级联删除 */
+    REMOVE,
+
+    /** Cascade refresh operation 级联刷新 */
+    REFRESH,
+
+    /**
+     * Cascade detach operation
+     * 级联分离
+     * @since Java Persistence 2.0
+     *
+     */
+    DETACH
+
+		
+fetch默认值 EAGER 急加载
+默认情况下，jpa持续性提供程序使用获取类型EAGER：这将要求持续性提供程序运行时必须迫切获取数据
