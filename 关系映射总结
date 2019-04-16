@@ -34,8 +34,21 @@ cascade没有写，即是默认值，就是不级联的意思。
 		
 fetch默认值 EAGER 急加载
 默认情况下，jpa持续性提供程序使用获取类型EAGER：这将要求持续性提供程序运行时必须迫切获取数据
+    Lazy: 只有需要的时候才将相关联的实体取出
+    EAGER: 一次将所有相关联的实体取出
+懒加载是在属性被引用时，才生成查询语句，抽取相关联数据。
+而实时加载则是执行完主查询后,不管是否被引用,立马执行后续的关联数据查询
 
-lazy 时 no session
+lazy 查询了两次 性能好
+select teacher0_.id as id1_4_0_, teacher0_.name as name2_4_0_ from teacher teacher0_ where teacher0_.id=5
+
+select stus0_.teacher_id as teacher_1_5_0_, stus0_.stus_id as stus_id2_5_0_, student1_.id as id1_1_1_, student1_.name as name2_1_1_ from teacher_stus stus0_ inner join student student1_ on stus0_.stus_id=student1_.id where stus0_.teacher_id=5
+
+EAGER一次查询出全部
+select teacher0_.id as id1_4_0_, teacher0_.name as name2_4_0_, stus1_.teacher_id as teacher_1_5_1_, student2_.id as stus_id2_5_1_, student2_.id as id1_1_2_, student2_.name as name2_1_2_ from teacher teacher0_ left outer join teacher_stus stus1_ on teacher0_.id=stus1_.teacher_id left outer join student student2_ on stus1_.stus_id=student2_.id where teacher0_.id=5
+
+
+lazy有 no session问题
 解决LazyInitializationException异常大概有这么几种方式
 1.关闭LazyInitialization, 将fetch设成eager
 2.在spring boot的配置文件application.properties添加spring.jpa.open-in-view=true
@@ -43,3 +56,4 @@ lazy 时 no session
 4. @Test 测试时使用@Transactional
 原文：https://blog.csdn.net/chrislyl/article/details/54630413 
 
+mappedBy指定many为多方关系的被维护端

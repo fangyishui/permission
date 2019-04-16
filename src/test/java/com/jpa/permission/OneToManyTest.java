@@ -45,7 +45,8 @@ public class OneToManyTest {
 	@Test
 	@Transactional
 	public void OneToManyQuery() {
-		System.out.println("OneToManyQuery-lazy"+teacherRepo.findById(1));
+		System.out.println("OneToManyQuery-lazy"+teacherRepo.findById(5));
+//		System.out.println("OneToManyQuery-lazy"+teacherRepo.findOne(5));
 	}
 	
 	@Test
@@ -61,4 +62,10 @@ public class OneToManyTest {
 //		tea.setStu(stu);
 		teacherRepo.save(tea);
 	}
+	
+	@Test
+	public void OneToManyDelete() {
+		teacherRepo.deleteById(4);
+	}
+	
 }
