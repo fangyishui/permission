@@ -15,4 +15,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
- 
+#    open-in-view: true
+#懒加载
+#spring.jpa.open-in-view=true

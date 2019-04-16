@@ -6,4 +6,5 @@ import com.jpa.permission.onetomany.Teacher;
 
 public interface TeacherOneToManyRepositiry extends JpaRepository<Teacher, Integer>{
 
+	Teacher findTeacherByName(String name);
 }

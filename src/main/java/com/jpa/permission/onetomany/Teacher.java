@@ -3,10 +3,8 @@ package com.jpa.permission.onetomany;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +25,6 @@ public class Teacher {
 	@Column(length = 100)
 	private String name;
 
-	@OneToMany
-//	@OneToMany(cascade= {CascadeType.PERSIST},fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="tea")
 	private List<Student> stus;
 }

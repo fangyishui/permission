@@ -2,6 +2,7 @@ package com.jpa.permission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -26,27 +27,35 @@ public class OneToManyTest {
 	public void OneToManyAdd() {
 		
 		Student stu = new Student();
-		stu.setName("Jack2");
+		stu.setName("Jack1");
 		Student stu2 = new Student();
-		stu2.setName("Jack222");
+		stu2.setName("Jack2");
 		
 		List<Student> stus = new ArrayList<Student>();
 		stus.add(stu);
 		stus.add(stu2);
 		
 		Teacher tea = new Teacher();
-		tea.setName("TOm2");
+		tea.setName("Tom");
+		
 		tea.setStus(stus);
 		
-		teacherRepo.save(tea);
-		
+//		teacherRepo.save(tea);
+		teacherRepo.saveAndFlush(tea);
 	}
 	
 	@Test
 	@Transactional
 	public void OneToManyQuery() {
-		System.out.println("OneToManyQuery-lazy"+teacherRepo.findById(5));
-//		System.out.println("OneToManyQuery-lazy"+teacherRepo.findOne(5));
+//		System.out.println("OneToManyQuery-lazy"+teacherRepo.findById(5));
+		Optional<Teacher> findById = teacherRepo.findById(4);
+		System.out.println("============"+findById);
+	}
+	
+	@Test
+	@Transactional
+	public void OneToManyQueryByName() {
+		System.out.println("OneToManyQuery-lazy"+teacherRepo.findTeacherByName("TOm2"));
 	}
 	
 	@Test
@@ -65,7 +74,7 @@ public class OneToManyTest {
 	
 	@Test
 	public void OneToManyDelete() {
-		teacherRepo.deleteById(4);
+		teacherRepo.deleteById(1);
 	}
 	
 }

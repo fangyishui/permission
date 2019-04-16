@@ -32,7 +32,11 @@ cascade没有写，即是默认值，就是不级联的意思。
     DETACH
 	如果你要删除一个实体，但是它有外键无法删除，你就需要这个级联权限了。它会撤销所有相关的外键关联。
 		
-fetch默认值 EAGER 急加载
+fetch默认值  
+ManyToOne default EAGER;
+OneToMany default LAZY;
+ManyToMany default LAZY;
+
 默认情况下，jpa持续性提供程序使用获取类型EAGER：这将要求持续性提供程序运行时必须迫切获取数据
     Lazy: 只有需要的时候才将相关联的实体取出
     EAGER: 一次将所有相关联的实体取出
@@ -47,6 +51,11 @@ select stus0_.teacher_id as teacher_1_5_0_, stus0_.stus_id as stus_id2_5_0_, stu
 EAGER一次查询出全部
 select teacher0_.id as id1_4_0_, teacher0_.name as name2_4_0_, stus1_.teacher_id as teacher_1_5_1_, student2_.id as stus_id2_5_1_, student2_.id as id1_1_2_, student2_.name as name2_1_2_ from teacher teacher0_ left outer join teacher_stus stus1_ on teacher0_.id=stus1_.teacher_id left outer join student student2_ on stus1_.stus_id=student2_.id where teacher0_.id=5
 
+ 记住@OneToMany这个标签最后的英文单词,如果是要得到Many的一方，我不管你前面是什么，
+ 只要后面的单词是Many，也就是说要得到多的一方，你们就给我记住，默认的加载策略就是延迟加载
+ (Many记录可能上几万条，立即加载的话可能对效率影响大，所以延迟加载)。   
+    反过来，如果后面是One呢？因为它是加载一的一方，这对性能影响不是很大，所以它的默认加载策略是立即加载。
+原文：https://blog.csdn.net/qq_25341165/article/details/70888938 
 
 lazy有 no session问题
 解决LazyInitializationException异常大概有这么几种方式
@@ -57,3 +66,25 @@ lazy有 no session问题
 原文：https://blog.csdn.net/chrislyl/article/details/54630413 
 
 mappedBy指定many为多方关系的被维护端
+
+
+使用这样同时使用@OneToMany和@ManyToOne要注意以下几点：
+
+1. 在从表@ManyToOne中要使用FetchType.LAZY，否则会导致性能降低。
+2. 主表中增加了2个方法，addComment和removeComment。
+3. 从表重载了equals和hashCode方法。
+4. 在使用Json来序列化对象时，会产生无限递归（Infinite recursion）的错误。这里有2个解决方法：
+   a. 在@ManyToOne下面使用@JsonIgnore.
+   b. 在@OneToMany下面使用@JsonManagedReference,
+   	     在@ManyToOne下面使用@JsonBackReference
+
+@JsonBackReference和@JsonManagedReference：
+@JsonBackReference标注的属性在序列化（serialization)时，
+会被忽略。@JsonManagedReference标注的属性则会被序列化。
+在序列化时，@JsonBackReference的作用相当于@JsonIgnore，
+此时可以没有@JsonManagedReference。但在反序列化（deserialization）时，
+如果没有@JsonManagedReference，则不会自动注入@JsonBackReference标注的属性；
+如果有@JsonManagedReference，则会自动注入@JsonBackReference标注的属性。  
+
+@JsonIgnore：直接忽略某个属性，以断开无限递归，序列化或反序列化均忽略。
+当然如果标注在get、set方法中，则可以分开控制，序列化对应的是get方法，反序列化对应的是set方法。
